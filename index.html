@@ -103,8 +103,8 @@
                 keepalive: true 
             });
 
-            // Absolute instant client extraction runtime execution escape
-            window.location.href = targetUrl;
+            // FIX: Opens the affiliate/product link in a pristine new tab safely
+            window.open(targetUrl, '_blank');
         }
 
         // Render cards onto UI dynamic generation Engine
