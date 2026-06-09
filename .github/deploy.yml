@@ -1,0 +1,42 @@
+name: Deploy Safe Static Site to Pages
+
+on:
+  push:
+    branches: ["main"] # Triggers every time you push code to main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps: deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # This step safely injects your hidden secrets right before build compilation
+      - name: Inject Production Credentials
+        run: |
+          sed -i "s|TRACKING_URL_PLACEHOLDER|${{ secrets.TRACKING_API_URL }}|g" index.html
+          sed -i "s|TOKEN_PLACEHOLDER|${{ secrets.SECRET_TOKEN }}|g" index.html
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

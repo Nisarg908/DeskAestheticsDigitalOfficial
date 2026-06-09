@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Featured Products</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        /* Smooth tap highlight removal for mobile devices */
+        button, a { -webkit-tap-highlight-color: transparent; }
+    </style>
+</head>
+<body class="bg-zinc-950 text-zinc-100 min-h-screen font-sans selection:bg-teal-500 selection:text-black">
+
+    <div class="max-w-md mx-auto px-4 py-8 flex flex-col items-center">
+        
+        <header class="text-center mb-8 flex flex-col items-center">
+            <div class="w-20 h-20 bg-gradient-to-tr from-teal-400 to-emerald-400 rounded-full mb-3 flex items-center justify-center font-bold text-2xl text-zinc-950 shadow-lg shadow-teal-500/20">
+                YT
+            </div>
+            <h1 class="text-xl font-bold tracking-tight">@deskaestheticsdigitalofficial</h1>
+            <p class="text-sm text-zinc-400 mt-1 max-w-xs">Tap any product below to get the exact gear featured in my YouTube Shorts!</p>
+        </header>
+
+        <main id="product-container" class="w-full space-y-4">
+            <div class="animate-pulse bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden flex h-28">
+                <div class="w-28 h-full bg-zinc-800"></div>
+                <div class="p-3 flex-1 flex flex-col justify-between">
+                    <div class="space-y-2">
+                        <div class="h-4 bg-zinc-800 rounded w-2/3"></div>
+                        <div class="h-3 bg-zinc-800 rounded w-5/6"></div>
+                    </div>
+                    <div class="h-3 bg-zinc-800 rounded w-1/4 self-end"></div>
+                </div>
+            </div>
+            <div class="animate-pulse bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden flex h-28">
+                <div class="w-28 h-full bg-zinc-800"></div>
+                <div class="p-3 flex-1 flex flex-col justify-between">
+                    <div class="space-y-2">
+                        <div class="h-4 bg-zinc-800 rounded w-1/2"></div>
+                        <div class="h-3 bg-zinc-800 rounded w-full"></div>
+                    </div>
+                    <div class="h-3 bg-zinc-800 rounded w-1/4 self-end"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="mt-12 text-center text-xs text-zinc-600 tracking-wider">
+            &copy; 2026 Your Channel. All rights reserved.
+        </footer>
+    </div>
+
+    <script>
+        // These are text placeholders. GitHub Actions will replace them during deployment.
+        const TRACKING_API_URL = "TRACKING_URL_PLACEHOLDER";
+        const SECRET_TOKEN = "TOKEN_PLACEHOLDER";
+
+        // Global fallback if spreadsheet fetching encounters connectivity blockages
+        let localProductsCache = [];
+
+        // Dynamic API Data Ingestion Fetcher
+        async function loadLiveProducts() {
+            const container = document.getElementById('product-container');
+            try {
+                // Fetch directly from the GET endpoint of your Apps Script
+                const response = await fetch(TRACKING_API_URL);
+                if (!response.ok) throw new Error("Network configuration fault");
+                
+                const products = await response.json();
+                localProductsCache = products; // Cache values locally
+                
+                if (products.length === 0) {
+                    container.innerHTML = `<p class="text-center text-sm text-zinc-500 py-8">No gear listed yet. Check back soon!</p>`;
+                    return;
+                }
+                
+                renderProducts(products);
+            } catch (error) {
+                console.error("Sheet synchronization failed:", error);
+                container.innerHTML = `
+                    <p class="text-center text-xs text-red-400 bg-red-950/20 border border-red-900/30 p-3 rounded-xl">
+                        Failed to load dynamic product feeds. Refresh page.
+                    </p>
+                `;
+            }
+        }
+
+        // Background non-blocking tracking redirect function
+        function trackAndRedirect(productId, productName, targetUrl) {
+            const payload = {
+                productId: productId,
+                productName: productName,
+                url: targetUrl,
+                secretToken: SECRET_TOKEN
+            };
+
+            // Fast background handshake injection
+            fetch(TRACKING_API_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+                keepalive: true 
+            });
+
+            // Absolute instant client extraction runtime execution escape
+            window.location.href = targetUrl;
+        }
+
+        // Render cards onto UI dynamic generation Engine
+        function renderProducts(productsList) {
+            const container = document.getElementById('product-container');
+            container.innerHTML = productsList.map(product => `
+                <div onclick="trackAndRedirect('${product.id}', '${product.name.replace(/'/g, "\\'")}', '${product.targetUrl}')" 
+                     class="group bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-md hover:border-teal-500/50 transition-all duration-300 cursor-pointer flex active:scale-[0.99]">
+                    
+                    <div class="w-28 h-28 shrink-0 relative bg-zinc-800">
+                        <img src="${product.imageUrl}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" 
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1555538995-7354a7d61335?w=200&q=40';"/>
+                    </div>
+                    
+                    <div class="p-3 flex flex-col justify-between flex-1 min-w-0">
+                        <div>
+                            <h2 class="text-sm font-semibold text-zinc-100 truncate group-hover:text-teal-400 transition-colors">${product.name}</h2>
+                            <p class="text-xs text-zinc-400 line-clamp-2 mt-1 leading-relaxed">${product.description}</p>
+                        </div>
+                        <div class="text-[11px] font-medium text-teal-400 flex items-center gap-1 mt-1 justify-end">
+                            Shop Item 
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 transform group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" /></svg>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Run fetch configuration pipeline on init lifecycle initialization
+        document.addEventListener('DOMContentLoaded', loadLiveProducts);
+    </script>
+</body>
+</html>
