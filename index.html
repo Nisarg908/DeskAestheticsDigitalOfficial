@@ -6,27 +6,66 @@
     <title>Shop Featured Products</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
+        /* Light Mode Variables (Default Baseline) */
+        :root {
+            --bg-gradient: radial-gradient(ellipse at top, #f1f5f9, #e4e4e7, #d4d4d4);
+            --text-main: #27272a;
+            --text-muted: #71717a;
+            --box-bg: rgba(255, 255, 255, 0.9);
+            --box-border: #e4e4e7;
+            --img-fallback-bg: #f4f4f5;
+        }
+
+        /* Dark Mode Variables (Triggered when .dark class is added to <html>) */
+        html.dark {
+            --bg-gradient: radial-gradient(ellipse at top, #18181b, #09090b, #000000);
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+            --box-bg: rgba(39, 39, 42, 0.4);
+            --box-border: rgba(63, 63, 70, 0.4);
+            --img-fallback-bg: #18181b;
+        }
+
+        /* Seamless Native CSS Core Assignments */
+        .theme-bg { background: var(--bg-gradient) fixed; }
+        .theme-text { color: var(--text-main); }
+        .theme-text-muted { color: var(--text-muted); }
+        .theme-box { background-color: var(--box-bg); border-color: var(--box-border); }
+        .theme-img-bg { background-color: var(--img-fallback-bg); }
+
         /* Smooth tap highlight removal for mobile devices */
         button, a { -webkit-tap-highlight-color: transparent; }
     </style>
 </head>
-<body class="bg-zinc-950 text-zinc-100 min-h-screen font-sans selection:bg-teal-500 selection:text-black">
+<body class="theme-bg theme-text transition-colors duration-300 min-h-screen font-sans selection:bg-teal-500 selection:text-black">
 
-    <div class="max-w-md mx-auto px-4 py-8 flex flex-col items-center">
+    <div class="max-w-6xl mx-auto px-4 py-6 flex flex-col items-center relative">
         
-        <header class="text-center mb-8 flex flex-col items-center">
-            <div class="w-20 h-20 bg-gradient-to-tr from-teal-400 to-emerald-400 rounded-full mb-3 p-[2px] shadow-lg shadow-teal-500/20">
+        <div class="w-full flex justify-end mb-4">
+            <button onclick="toggleTheme()" aria-label="Toggle display theme"
+                    class="p-2.5 rounded-xl theme-box border shadow-sm backdrop-blur-md cursor-pointer hover:scale-105 active:scale-95 transition-all theme-text-muted hover:text-teal-500">
+                <svg id="theme-icon-sun" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M14.5 12a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                </svg>
+                <svg id="theme-icon-moon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+            </button>
+        </div>
+        
+        <header class="text-center mb-8 flex flex-col items-center max-w-md mx-auto">
+            <div class="w-24 h-24 bg-gradient-to-tr from-teal-400 to-emerald-400 rounded-full mb-4 p-[2.5px] shadow-lg shadow-teal-500/10">
                 <img src="./public/images/Aesthetic Desk Setups_Zoom.png" 
                     alt="@deskaestheticsdigitalofficial profile" 
-                    class="w-full h-full object-cover rounded-full bg-zinc-900"
+                    class="w-full h-full object-cover rounded-full theme-img-bg"
                     loading="eager" />
             </div>
             
             <a href="https://youtube.com/@deskaestheticsdigitalofficial" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            class="group flex items-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all duration-200">
-                <h1 class="text-xl font-bold tracking-tight text-zinc-100 group-hover:text-teal-400 transition-colors">
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="group flex items-center gap-2 hover:opacity-95 active:scale-[0.98] transition-all duration-200">
+                <h1 class="text-xl font-bold tracking-tight theme-text hover:text-teal-500 transition-colors">
                     @deskaestheticsdigitalofficial
                 </h1>
                 <svg class="w-5 h-5 text-red-500 fill-current transform group-hover:scale-110 group-hover:text-red-400 transition-all duration-300 shrink-0" 
@@ -36,76 +75,249 @@
                 </svg>
             </a>
             
-            <p class="text-sm text-zinc-400 mt-2 max-w-xs">
-                Tap any product below to get the exact gear featured in my YouTube Shorts!
+            <p class="text-xs theme-text-muted mt-2">
+                Get the exact setup gear featured in my YouTube Shorts. Fully updated in real-time.
             </p>
         </header>
 
-        <main id="product-container" class="w-full space-y-4">
-            <div class="animate-pulse bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden flex h-28">
-                <div class="w-28 h-full bg-zinc-800"></div>
-                <div class="p-3 flex-1 flex flex-col justify-between">
-                    <div class="space-y-2">
-                        <div class="h-4 bg-zinc-800 rounded w-2/3"></div>
-                        <div class="h-3 bg-zinc-800 rounded w-5/6"></div>
-                    </div>
-                    <div class="h-3 bg-zinc-800 rounded w-1/4 self-end"></div>
-                </div>
-            </div>
-            <div class="animate-pulse bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden flex h-28">
-                <div class="w-28 h-full bg-zinc-800"></div>
-                <div class="p-3 flex-1 flex flex-col justify-between">
-                    <div class="space-y-2">
-                        <div class="h-4 bg-zinc-800 rounded w-1/2"></div>
-                        <div class="h-3 bg-zinc-800 rounded w-full"></div>
-                    </div>
-                    <div class="h-3 bg-zinc-800 rounded w-1/4 self-end"></div>
-                </div>
-            </div>
+        <div class="flex theme-box p-1 rounded-xl border mb-8 max-w-xs w-full backdrop-blur-md shadow-sm transition-colors duration-300">
+            <button id="tab-feed" onclick="switchView('feed')" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all duration-300 cursor-pointer bg-teal-500 text-white shadow-sm dark:bg-teal-400 dark:text-zinc-950">
+                All Products
+            </button>
+            <button id="tab-collections" onclick="switchView('collections')" class="flex-1 py-2 text-xs font-semibold rounded-lg transition-all duration-300 cursor-pointer theme-text-muted hover:opacity-80">
+                Collections
+            </button>
+        </div>
+
+        <main id="feed-view" class="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-center">
+            <div class="animate-pulse theme-box border rounded-2xl h-64 opacity-60"></div>
+            <div class="animate-pulse theme-box border rounded-2xl h-64 opacity-60"></div>
+            <div class="animate-pulse theme-box border rounded-2xl h-64 opacity-60"></div>
+            <div class="animate-pulse theme-box border rounded-2xl h-64 opacity-60"></div>
         </main>
 
-        <footer class="mt-12 text-center text-xs text-zinc-600 tracking-wider">
-            &copy; 2026 @deskaestheticsdigitalofficial. All rights reserved.
+        <main id="collections-view" class="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 hidden">
+            </main>
+
+        <main id="single-collection-view" class="w-full flex flex-col hidden">
+            <div class="flex flex-col items-start gap-3 mb-6 pb-4 border-b border-zinc-200 dark:border-zinc-900">
+                <button onclick="exitCollectionToBoards()" class="flex items-center gap-1.5 text-xs font-bold theme-text-muted hover:text-teal-500 dark:hover:text-teal-400 transition-colors cursor-pointer group">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 transform group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" /></svg>
+                    Back to Collections
+                </button>
+                <div class="flex items-baseline gap-2.5">
+                    <h2 id="collection-title-header" class="text-lg font-extrabold tracking-tight theme-text">Category Collection</h2>
+                    <span id="collection-badge-counter" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20 dark:border-teal-500/10">0 Items</span>
+                </div>
+            </div>
+            <div id="single-collection-grid" class="w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-center">
+                </div>
+        </main>
+
+        <footer class="mt-16 text-center text-xs theme-text-muted tracking-wider w-full border-t border-zinc-200 dark:border-zinc-900 pt-8">
+            &copy; <span id="current-year">2026</span> @deskaestheticsdigitalofficial. All rights reserved.
         </footer>
     </div>
 
     <script>
-        // These are text placeholders. GitHub Actions will replace them during deployment.
         const TRACKING_API_URL = "TRACKING_URL_PLACEHOLDER";
         const SECRET_TOKEN = "TOKEN_PLACEHOLDER";
 
-        // Global fallback if spreadsheet fetching encounters connectivity blockages
-        let localProductsCache = [];
+        let allProductsRawData = [];
+        let activeInterfaceView = "feed"; 
+
+        // Core Theme Injection Engine (Native variables swap method)
+        function initThemePipeline() {
+            const savedThemePreference = localStorage.getItem('user-theme-color');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedThemePreference === 'dark' || (!savedThemePreference && systemPrefersDark)) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('theme-icon-sun').classList.remove('hidden');
+                document.getElementById('theme-icon-moon').classList.add('hidden');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('theme-icon-sun').classList.add('hidden');
+                document.getElementById('theme-icon-moon').classList.remove('hidden');
+            }
+        }
+
+        function toggleTheme() {
+            const isCurrentlyDark = document.documentElement.classList.contains('dark');
+            if (isCurrentlyDark) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('user-theme-color', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('user-theme-color', 'dark');
+            }
+            initThemePipeline(); 
+            
+            // Re-render current layout components to sync native class adjustments smoothly
+            if (allProductsRawData.length > 0) {
+                if (activeInterfaceView === 'feed') renderFeedGrid(allProductsRawData, 'feed-view');
+                else if (activeInterfaceView === 'collections') renderCollectionsDashboard();
+            }
+        }
 
         // Dynamic API Data Ingestion Fetcher
         async function loadLiveProducts() {
-            const container = document.getElementById('product-container');
             try {
-                // Fetch directly from the GET endpoint of your Apps Script
                 const response = await fetch(TRACKING_API_URL);
                 if (!response.ok) throw new Error("Network configuration fault");
                 
-                const products = await response.json();
-                localProductsCache = products; // Cache values locally
+                allProductsRawData = await response.json();
                 
-                if (products.length === 0) {
-                    container.innerHTML = `<p class="text-center text-sm text-zinc-500 py-8">No gear listed yet. Check back soon!</p>`;
+                if (allProductsRawData.length === 0) {
+                    document.getElementById('feed-view').innerHTML = `<p class="text-center text-sm theme-text-muted py-12 col-span-full">No items listed yet.</p>`;
                     return;
                 }
                 
-                renderProducts(products);
+                renderFeedGrid(allProductsRawData, 'feed-view');
+                renderCollectionsDashboard();
             } catch (error) {
                 console.error("Sheet synchronization failed:", error);
-                container.innerHTML = `
-                    <p class="text-center text-xs text-red-400 bg-red-950/20 border border-red-900/30 p-3 rounded-xl">
-                        Failed to load dynamic product feeds. Refresh page.
-                    </p>
+                document.getElementById('feed-view').innerHTML = `
+                    <div class="text-center text-xs text-red-500 bg-red-500/10 border border-red-200 dark:border-red-900/30 p-4 rounded-2xl w-full mx-auto max-w-sm col-span-full">
+                        Failed to synchronize live desk setups feed. Please refresh.
+                    </div>
                 `;
             }
         }
 
-        // Background non-blocking tracking redirect function
-        function trackAndRedirect(productId, productName, targetUrl) {
+        // Main Tab Interface Navigation Switcher Router
+        function switchView(targetView) {
+            activeInterfaceView = targetView;
+            
+            const feedView = document.getElementById('feed-view');
+            const collectionsView = document.getElementById('collections-view');
+            const singleCollectionView = document.getElementById('single-collection-view');
+            
+            const tabFeed = document.getElementById('tab-feed');
+            const tabCollections = document.getElementById('tab-collections');
+
+            if (targetView === 'feed') {
+                feedView.classList.remove('hidden');
+                collectionsView.classList.add('hidden');
+                singleCollectionView.classList.add('hidden');
+                
+                tabFeed.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all duration-300 cursor-pointer bg-teal-500 text-white shadow-sm dark:bg-teal-400 dark:text-zinc-950";
+                tabCollections.className = "flex-1 py-2 text-xs font-semibold rounded-lg transition-all duration-300 cursor-pointer theme-text-muted hover:opacity-80";
+                renderFeedGrid(allProductsRawData, 'feed-view'); 
+            } else {
+                feedView.classList.add('hidden');
+                collectionsView.classList.remove('hidden');
+                singleCollectionView.classList.add('hidden'); 
+                
+                tabFeed.className = "flex-1 py-2 text-xs font-semibold rounded-lg transition-all duration-300 cursor-pointer theme-text-muted hover:opacity-80";
+                tabCollections.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all duration-300 cursor-pointer bg-teal-500 text-white shadow-sm dark:bg-teal-400 dark:text-zinc-950";
+                renderCollectionsDashboard();
+            }
+        }
+
+        // Shared Render Grid Output Layout Core Engine
+        function renderFeedGrid(productsList, targetContainerId) {
+            const container = document.getElementById(targetContainerId);
+            container.innerHTML = productsList.map(product => `
+                <a href="${product.targetUrl}" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   onclick="logClickMetrics('${product.id}', '${product.name.replace(/'/g, "\\'")}', '${product.targetUrl}')" 
+                   class="group theme-box border rounded-2xl overflow-hidden shadow-sm dark:shadow-lg hover:border-teal-500/40 hover:shadow-teal-500/5 transition-all duration-300 flex flex-col active:scale-[0.99] block backdrop-blur-sm w-full">
+                    
+                    <div class="w-full aspect-square relative theme-img-bg overflow-hidden shrink-0 border-b border-zinc-200/60 dark:border-zinc-900/50">
+                        <img src="${product.imageUrl}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500" loading="lazy" 
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1555538995-7354a7d61335?w=400&q=40';"/>
+                    </div>
+                    
+                    <div class="p-3.5 flex flex-col justify-between flex-1 min-w-0">
+                        <div class="mb-3">
+                            <h2 class="text-xs font-bold theme-text line-clamp-2 leading-snug group-hover:text-teal-500 dark:group-hover:text-teal-400 transition-colors">${product.name}</h2>
+                            <p class="text-[10px] theme-text-muted line-clamp-2 mt-1 leading-relaxed">${product.description}</p>
+                        </div>
+                        <div class="text-[9px] font-bold text-teal-600 dark:text-teal-400/90 flex items-center gap-0.5 justify-end uppercase tracking-wider shrink-0 mt-auto">
+                            Shop Item 
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-2.5 w-2.5 transform group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>
+                        </div>
+                    </div>
+                </a>
+            `).join('');
+        }
+
+        // Render Folder boards matrix list layout view
+        function renderCollectionsDashboard() {
+            const container = document.getElementById('collections-view');
+            const collectionMap = {};
+
+            allProductsRawData.forEach(product => {
+                if (product.categories) {
+                    product.categories.split(',').forEach(cat => {
+                        const trimmedCat = cat.trim();
+                        if (!trimmedCat) return;
+                        if (!collectionMap[trimmedCat]) {
+                            collectionMap[trimmedCat] = { count: 0, sampleImage: product.imageUrl };
+                        }
+                        collectionMap[trimmedCat].count += 1;
+                    });
+                }
+            });
+
+            const collectionsArray = Object.keys(collectionMap).sort();
+
+            if (collectionsArray.length === 0) {
+                container.innerHTML = `<p class="text-center text-sm theme-text-muted py-12 col-span-full">No active collections found.</p>`;
+                return;
+            }
+
+            container.innerHTML = collectionsArray.map(categoryName => {
+                const boardInfo = collectionMap[categoryName];
+                return `
+                    <div onclick="openSpecificCollection('${categoryName.replace(/'/g, "\\'")}')"
+                         class="group theme-box border rounded-2xl p-3 shadow-sm dark:shadow-md hover:border-teal-500/30 transition-all duration-300 cursor-pointer active:scale-[0.98] backdrop-blur-sm flex flex-col">
+                        
+                        <div class="w-full aspect-video theme-img-bg rounded-xl overflow-hidden relative shadow-inner mb-3 shrink-0">
+                            <img src="${boardInfo.sampleImage}" alt="${categoryName}" class="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500" loading="lazy"/>
+                            <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent opacity-20 dark:opacity-60"></div>
+                            
+                            <span class="absolute bottom-2.5 right-2.5 bg-white/90 dark:bg-zinc-950/80 text-zinc-700 dark:text-zinc-300 text-[10px] font-bold px-2 py-0.5 rounded-md border border-zinc-200 dark:border-zinc-800/80 uppercase tracking-wider">
+                                ${boardInfo.count} Items
+                            </span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between px-1">
+                            <div>
+                                <h3 class="text-xs font-bold theme-text group-hover:text-teal-500 dark:group-hover:text-teal-400 transition-colors">${categoryName}</h3>
+                                <p class="text-[10px] theme-text-muted mt-0.5">Browse Curated Setup Board</p>
+                            </div>
+                            <div class="w-6 h-6 rounded-lg bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center border border-zinc-200 dark:border-zinc-800/60 text-zinc-400 group-hover:text-teal-500 dark:group-hover:text-teal-400 transition-colors shrink-0 ml-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" /></svg>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openSpecificCollection(categoryName) {
+            document.getElementById('collections-view').classList.add('hidden');
+            const singleCollectionView = document.getElementById('single-collection-view');
+            singleCollectionView.classList.remove('hidden');
+
+            document.getElementById('collection-title-header').textContent = categoryName;
+
+            const filteredProducts = allProductsRawData.filter(p => p.categories && p.categories.split(',').map(c => c.trim()).includes(categoryName));
+            document.getElementById('collection-badge-counter').textContent = `${filteredProducts.length} Item${filteredProducts.length === 1 ? '' : 's'}`;
+
+            renderFeedGrid(filteredProducts, 'single-collection-grid');
+            singleCollectionView.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function exitCollectionToBoards() {
+            document.getElementById('single-collection-view').classList.add('hidden');
+            document.getElementById('collections-view').classList.remove('hidden');
+        }
+
+        function logClickMetrics(productId, productName, targetUrl) {
             const payload = {
                 productId: productId,
                 productName: productName,
@@ -113,7 +325,6 @@
                 secretToken: SECRET_TOKEN
             };
 
-            // Fast background handshake injection
             fetch(TRACKING_API_URL, {
                 method: 'POST',
                 mode: 'no-cors',
@@ -121,39 +332,12 @@
                 body: JSON.stringify(payload),
                 keepalive: true 
             });
-
-            // FIX: Opens the affiliate/product link in a pristine new tab safely
-            window.open(targetUrl, '_blank');
         }
 
-        // Render cards onto UI dynamic generation Engine
-        function renderProducts(productsList) {
-            const container = document.getElementById('product-container');
-            container.innerHTML = productsList.map(product => `
-                <div onclick="trackAndRedirect('${product.id}', '${product.name.replace(/'/g, "\\'")}', '${product.targetUrl}')" 
-                     class="group bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden shadow-md hover:border-teal-500/50 transition-all duration-300 cursor-pointer flex active:scale-[0.99]">
-                    
-                    <div class="w-28 h-28 shrink-0 relative bg-zinc-800">
-                        <img src="${product.imageUrl}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" 
-                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1555538995-7354a7d61335?w=200&q=40';"/>
-                    </div>
-                    
-                    <div class="p-3 flex flex-col justify-between flex-1 min-w-0">
-                        <div>
-                            <h2 class="text-sm font-semibold text-zinc-100 truncate group-hover:text-teal-400 transition-colors">${product.name}</h2>
-                            <p class="text-xs text-zinc-400 line-clamp-2 mt-1 leading-relaxed">${product.description}</p>
-                        </div>
-                        <div class="text-[11px] font-medium text-teal-400 flex items-center gap-1 mt-1 justify-end">
-                            Shop Item 
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 transform group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" /></svg>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Run fetch configuration pipeline on init lifecycle initialization
-        document.addEventListener('DOMContentLoaded', loadLiveProducts);
+        document.addEventListener('DOMContentLoaded', () => {
+            initThemePipeline(); 
+            loadLiveProducts();
+        });
     </script>
 </body>
 </html>
